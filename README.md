@@ -59,6 +59,13 @@ If you set this target with `utf8` you'll get unknown characters when pasting.
 Another thing to note is the `wrap_html` function. While setting plain html works on Linux, Windows uses it's own (unnecessary) format. This function takes html fragment string and returns formatted bytes object.
 `wrap_html` is only available on Windows.
 
+To list available targets/formats:
+
+```python
+>>> klembord.get(['TARGETS'])
+{'TARGETS': ['TARGETS', 'SAVE_TARGETS', 'UTF8_STRING', 'STRING']}
+```
+
 ## Why klembord
 
 klembord means clipboard in dutch. Since every reasonable name in english was taken on pypi, I decided to cosult a dictionary.
