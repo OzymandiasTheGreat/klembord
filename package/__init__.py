@@ -15,11 +15,11 @@ W_UNICODE = 'CF_UNICODETEXT'
 W_HTML = 'HTML Format'
 UTF16 = 'utf-16le'
 
-def init():
+def init(selection='CLIPBOARD'):
 
 	global clipboard
 	if LINUX:
-		clipboard = XClipboard.Clipboard()
+		clipboard = XClipboard.Clipboard(selection=selection)
 		clipboard.start()
 	else:
 		clipboard = WinClipboard.Clipboard()

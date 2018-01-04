@@ -31,6 +31,13 @@ That's it!
 ```
 
 Rich text function set platform's unicode and html formats.
+
+On Linux accessing selections other than `CLIPBOARD` is easy, just pass selection name to `init`:
+
+```python
+klembord.init('PRIMARY')
+```
+
 If you need access to other targets/formats you can use `get` and `set` functions:
 
 ```python
