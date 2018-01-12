@@ -19,7 +19,7 @@ classifiers = [
 
 setup(
 	name='klembord',
-	version='0.1.1',
+	version='0.1.2',
 	description='Full toolkit agnostic cross-platform clipboard access',
 	long_description=long_description,
 	url='https://github.com/OzymandiasTheGreat/klembord',
@@ -29,4 +29,5 @@ setup(
 	classifiers=classifiers,
 	packages=['klembord'],
 	package_dir={'klembord': 'package'},
+	python_requires='>=3.4',
 	install_requires=['python-xlib'])
