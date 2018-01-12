@@ -41,16 +41,20 @@ def set_text(text):
 	if LINUX:
 		clipboard.set({L_UNICODE: text})
 	else:
-		clipboard.set({W_UNICODE: text.encode(UTF16)})
+		clipboard.set({W_UNICODE: text.encode(UTF16) if text else text})
 
 def get_text():
 
 	if LINUX:
-		data = clipboard.get([L_UNICODE])
-		return data[L_UNICODE].decode()
+		data = clipboard.get([L_UNICODE])[L_UNICODE]
+		if data:
+			return data.decode()
+		return data
 	else:
-		data = clipboard.get([W_UNICODE])
-		return data[W_UNICODE].decode(UTF16)
+		data = clipboard.get([W_UNICODE])[W_UNICODE]
+		if data:
+			return data.decode(UTF16).strip('\x00')
+		return data
 
 def set_with_rich_text(text, html):
 
@@ -59,8 +63,8 @@ def set_with_rich_text(text, html):
 		clipboard.set(content)
 	else:
 		content = OrderedDict(
-			((W_HTML, clipboard.wrap_html(html)),
-			(W_UNICODE, text.encode(UTF16))))
+			((W_HTML, clipboard.wrap_html(html) if html else html),
+			(W_UNICODE, text.encode(UTF16) if text else text)))
 		clipboard.set(content)
 
 def get_with_rich_text():
@@ -76,8 +80,13 @@ def get_with_rich_text():
 		return (text, html)
 	else:
 		data = clipboard.get([W_UNICODE, W_HTML])
-		html = data[W_HTML].decode() # Strip windows weirdness
-		return (data[W_UNICODE].decode(UTF16), html)
+		text = data[W_UNICODE]
+		if text:
+			text = text.decode(UTF16).strip('\x00')
+		html = data[W_HTML]
+		if html:
+			html = html.decode()[131:-38] # Strip windows weirdness
+		return (text, html)
 
 def wrap_html(html):
 

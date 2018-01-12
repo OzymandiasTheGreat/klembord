@@ -79,13 +79,13 @@ class Clipboard(object):
 		windll.user32.OpenClipboard(None)
 		for target in targets_int:
 			if type(target) is int:
+				if target in self.names:
+					name = self.names[target]
+				else:
+					windll.user32.GetClipboardFormatNameW(
+						target, target_name, 1000)
+					name = target_name.value
 				if windll.user32.IsClipboardFormatAvailable(target):
-					if target in self.names:
-						name = self.names[target]
-					else:
-						windll.user32.GetClipboardFormatNameW(
-							target, target_name, 1000)
-						name = target_name.value
 					handle = windll.user32.GetClipboardData(target)
 					size = windll.kernel32.GlobalSize(handle)
 					ptr = windll.kernel32.GlobalLock(handle)
@@ -93,6 +93,8 @@ class Clipboard(object):
 					memmove(data, ptr, size)
 					windll.kernel32.GlobalUnlock(ptr)
 					content[name] = bytes(data)
+				else:
+					content[name] = None
 			else:
 				formats = []
 				format_ = windll.user32.EnumClipboardFormats(0)
@@ -127,14 +129,15 @@ class Clipboard(object):
 		windll.user32.OpenClipboard(None)
 		windll.user32.EmptyClipboard()
 		for target, data in content.items():
-			if type(data) is str:
-				data = data.encode('utf-16le')
-			handle = windll.kernel32.GlobalAlloc(
-				self.GMEM_MOVEABLE | self.GMEM_ZEROINIT, len(data) + 2)
-			ptr = windll.kernel32.GlobalLock(handle)
-			memmove(ptr, data, len(data))
-			windll.kernel32.GlobalUnlock(handle)
-			windll.user32.SetClipboardData(targets[target], handle)
+			if data:
+				if type(data) is str:
+					data = data.encode('utf-16le')
+				handle = windll.kernel32.GlobalAlloc(
+					self.GMEM_MOVEABLE | self.GMEM_ZEROINIT, len(data) + 2)
+				ptr = windll.kernel32.GlobalLock(handle)
+				memmove(ptr, data, len(data))
+				windll.kernel32.GlobalUnlock(handle)
+				windll.user32.SetClipboardData(targets[target], handle)
 		windll.user32.CloseClipboard()
 
 	def clear(self):

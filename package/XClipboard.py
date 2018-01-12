@@ -60,15 +60,18 @@ class Clipboard(Thread):
 								if xevent.target == self.TARGETS:
 									prop_value = ([self.TARGETS]
 										+ [self.display.get_atom(target)
-											for target in content])
+											for target in content
+												if content[target]])
 									prop_type = Xatom.ATOM
 									prop_format = 32
 								elif target_name in content:
 									data = content[target_name]
 									if type(data) is str:
 										prop_value = data.encode()
-									else:
+									elif type(data) in {bytes, bytearray}:
 										prop_value = data
+									else:
+										prop_value = b'\x00'
 									prop_type = xevent.target
 									prop_format = 8
 								else:
@@ -158,8 +161,6 @@ class Clipboard(Thread):
 
 		timeout = 0.01
 		wait = 0.005
-		if not timeout:
-			timeout = float('inf')
 		counter = 0
 		owner = X.NONE
 		counter += timer(set_owner)
@@ -186,8 +187,8 @@ class Clipboard(Thread):
 			content = {}
 			while not self.inbox.empty():
 				target = self.inbox.get()
-				self.inbox.task_done()
 				content[target[0]] = target[1]
+				self.inbox.task_done()
 		elif owner == self.window:
 			content = {}
 			for target in targets:
@@ -195,4 +196,7 @@ class Clipboard(Thread):
 					content[target] = self.current[target]
 		else:
 			content = {}
+		for target in targets:
+			if target not in content:
+				content[target] = None
 		return content
