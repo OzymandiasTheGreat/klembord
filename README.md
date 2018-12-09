@@ -73,6 +73,12 @@ To list available targets/formats:
 {'TARGETS': ['TARGETS', 'SAVE_TARGETS', 'UTF8_STRING', 'STRING']}
 ```
 
+### Clipboard persistence on Linux
+
+As of version 0.1.3 klembord supports storing content in clipboard after application
+exit. You do need to call `klembord.store()` explicitly. Note that this method
+raises `AttributeError` on Windows.
+
 ## Why klembord
 
 klembord means clipboard in dutch. Since every reasonable name in english was taken on pypi, I decided to cosult a dictionary.
@@ -84,4 +90,3 @@ I found the situation rather sad, so I decided to write `klembord`.
 
 * Setting binary formats should work in theory but it's mostly untested.
 * Setting/getting Windows built in binary formats (e.g. `CF_BITMAP`) doesn't work and WILL crash python. These require special handling which is currently not implemented in `klembord`
- 

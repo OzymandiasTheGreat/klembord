@@ -19,9 +19,10 @@ classifiers = [
 
 setup(
 	name='klembord',
-	version='0.1.2',
+	version='0.1.3',
 	description='Full toolkit agnostic cross-platform clipboard access',
 	long_description=long_description,
+	long_description_content_type='text/markdown',
 	url='https://github.com/OzymandiasTheGreat/klembord',
 	author='Tomas Ravinskas',
 	author_email='tomas.rav@gmail.com',
