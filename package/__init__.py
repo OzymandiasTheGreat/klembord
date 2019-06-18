@@ -153,7 +153,7 @@ class Selection(object):
 			data = content[L_UNICODE]
 			if data:
 				try:
-					return data.decode(utf8)
+					return data.decode(UTF8)
 				except UnicodeDecodeError:
 					return None
 			else:
