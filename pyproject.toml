@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "klembord"
-version = "0.2.0"
+version = "0.1.4"
 description = "Full toolkit agnostic cross-platform clipboard access"
 keywords = ["clipboard", "cross-platform"]
 authors = ["Ozymandias <tomas.rav@gmail.com>"]
