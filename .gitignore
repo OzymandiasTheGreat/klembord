@@ -1,3 +1,6 @@
 __pycache__
 *.pyc
+*.egg-info
+dist
+.venv
 scratchpad.py
