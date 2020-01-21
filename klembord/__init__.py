@@ -125,10 +125,10 @@ class Selection(object):
 				self.set({W_UNICODE: text})
 			else:
 				if text:
-					string = text.encode(ASCII)
+					string = text.encode(ASCII, 'ignore')
 					text = text.encode(UTF8)
 				else:
-					string = ''.encode(ASCII)
+					string = ''.encode(ASCII, 'ignore')
 					text = ''.encode(UTF8)
 				self.set({L_TEXT: string, L_UNICODE: text})
 		else:
@@ -225,7 +225,7 @@ class Selection(object):
 			else:
 				text = content[L_TEXT]
 				if text:
-					text = text.decode(ASCII)
+					text = text.decode(ASCII, 'ignore')
 			html = content[L_HTML]
 			if html:
 				try:

@@ -86,13 +86,12 @@ class XSelection(Thread):
 				else:
 					data = None
 			self.inbox.put_nowait((target, data))
-		except:
+		except Exception:
 			self.process_incoming(xevent)
 
 	def process_outgoing(self):
 
 		def process_request(client, property, target):
-
 			prop_set = True
 			if property == X.NONE:
 				client_prop = target
@@ -132,46 +131,57 @@ class XSelection(Thread):
 					client_prop, prop_type, prop_format, prop_value)
 			return client_prop
 
-		while True:
-			content = self.outbox.get()
-			self.outbox.task_done()
+		def serve():
+			while True:
+				xevent = self.requests.get()
+				self.requests.task_done()
+				if xevent.type == X.SelectionRequest:
+					client_prop = process_request(
+						xevent.requestor, xevent.property, xevent.target)
+					selection_notify = event.SelectionNotify(
+						time=xevent.time,
+						requestor=xevent.requestor,
+						selection=xevent.selection,
+						target=xevent.target,
+						property=client_prop)
+					xevent.requestor.send_event(selection_notify)
+					self.display.flush()
+				elif xevent.type == X.SelectionClear:
+					while not self.requests.empty():
+						try:
+							self.requests.get_nowait()
+							self.requests.task_done()
+						except Empty:
+							break
+					self.content_set = False
+					break
+				elif xevent.type == X.SelectionNotify:
+					if xevent.property == X.NONE:
+						print(
+							'Failed to transfer ownership to '
+							+ 'Clipboard Manager')
+
+		def take_ownership():
 			self.setter_window.set_selection_owner(
 				self.SELECTION, X.CurrentTime)
 			self.display.flush()
+
+		while True:
+			content = self.outbox.get()
+			self.outbox.task_done()
+			self.content_set = True
+			take_ownership()
 			current_owner = self.display.get_selection_owner(self.SELECTION)
-			if current_owner == self.setter_window:
-				while True:
-					xevent = self.requests.get()
-					self.requests.task_done()
-					if xevent.type == X.SelectionRequest:
-						client_prop = process_request(
-							xevent.requestor, xevent.property, xevent.target)
-						selection_notify = event.SelectionNotify(
-							time=xevent.time,
-							requestor=xevent.requestor,
-							selection=xevent.selection,
-							target=xevent.target,
-							property=client_prop)
-						xevent.requestor.send_event(selection_notify)
-						self.display.flush()
-					elif xevent.type == X.SelectionClear:
-						while not self.requests.empty():
-							try:
-								self.requests.get_nowait()
-								self.requests.task_done()
-							except Empty:
-								break
-						self.content_set = False
-						break
-					elif xevent.type == X.SelectionNotify:
-						if xevent.property == X.NONE:
-							print(
-								'Failed to transfer ownership to '
-								+ 'Clipboard Manager')
+			while current_owner != self.setter_window:
+				take_ownership()
+				time.sleep(0.005)
+				current_owner = self.display.get_selection_owner(self.SELECTION)
+			serve()
 
 	def get(self, targets):
 
 		content = {}
+		now = time.monotonic()
 		self.display.flush()
 		owner = self.display.get_selection_owner(self.SELECTION)
 		if owner != X.NONE:
@@ -187,8 +197,13 @@ class XSelection(Thread):
 				owner.send_event(selection_request)
 				self.display.flush()
 			while self.inbox.empty():
+				if (time.monotonic() - now) >= 0.05:
+					break
 				time.sleep(0.005)
+			now = time.monotonic()
 			while not self.inbox.empty():
+				if (time.monotonic() - now) >= 0.05:
+					break
 				target, data = self.inbox.get()
 				content[target] = data
 				self.inbox.task_done()
@@ -211,7 +226,6 @@ class XSelection(Thread):
 		if self.content_set:
 			self.setter_window.send_event(self.selection_clear)
 			self.display.flush()
-		self.content_set = True
 		self.outbox.put_nowait(content_atoms)
 
 	def store(self):
