@@ -79,6 +79,16 @@ As of version 0.1.3 klembord supports storing content in clipboard after applica
 exit. You do need to call `klembord.store()` explicitly. Note that this method
 raises `AttributeError` on Windows.
 
+### Selection object
+
+If you need to access `PRIMARY` selection at the same time as clipboard or you prefer working with objects rather than module level functions, you can use `Selection` objects.
+
+```python
+from klembord import Selection
+```
+
+These objects have the same methods as module level functions, with `klembord.init(SELECTION)` being the `Selection.__init__(SELECTION)`.
+
 ## Why klembord
 
 klembord means clipboard in dutch. Since every reasonable name in english was taken on pypi, I decided to cosult a dictionary.
