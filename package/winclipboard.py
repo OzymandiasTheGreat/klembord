@@ -182,18 +182,20 @@ class WinClipboard(object):
 		else:
 			raise RuntimeError('Failed to open clipboard')
 
-	def wrap_html(self, fragment):
-
+	def wrap_html(self, fragment_str):
+		fragment_bytes = fragment_str.encode('utf8')
 		footer = '<!--EndFragment-->\r\n</body>\r\n</html>'
 		header = ('Version:0.9\r\nStartHTML:{0}\r\nEndHTML:{1}\r\n'
 			+ 'StartFragment:{2}\r\nEndFragment:{3}\r\n<html><body>\r\n'
 			+ '<!--StartFragment-->')
 		padded_header = header.format(*['00000000'] * 4)
-		wrapped = ''.join((
-			(header.format(
+		wrapped = b''.join((
+			header.format(
 				str(97).zfill(8),
-				str(97 + len(fragment) + len(footer)).zfill(8),
+				str(97 + len(fragment_bytes) + len(footer)).zfill(8),
 				str(len(padded_header)).zfill(8),
-				str(len(padded_header) + len(fragment)).zfill(8))),
-			fragment, footer))
-		return wrapped.encode('utf8')
+				str(len(padded_header) + len(fragment_bytes)).zfill(8))
+				.encode('utf8'),
+			fragment_bytes,
+			footer.encode('utf8')))
+		return wrapped
