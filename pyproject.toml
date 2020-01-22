@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "klembord"
-version = "0.1.4"
+version = "0.1.5"
 description = "Full toolkit agnostic cross-platform clipboard access"
 readme = "README.md"
 keywords = ["clipboard", "cross-platform"]

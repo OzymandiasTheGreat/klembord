@@ -145,7 +145,7 @@ class XSelection(Thread):
 						target=xevent.target,
 						property=client_prop)
 					xevent.requestor.send_event(selection_notify)
-					self.display.flush()
+					self.flushRetry()
 				elif xevent.type == X.SelectionClear:
 					while not self.requests.empty():
 						try:
@@ -164,7 +164,7 @@ class XSelection(Thread):
 		def take_ownership():
 			self.setter_window.set_selection_owner(
 				self.SELECTION, X.CurrentTime)
-			self.display.flush()
+			self.flushRetry()
 
 		while True:
 			content = self.outbox.get()
@@ -182,7 +182,7 @@ class XSelection(Thread):
 
 		content = {}
 		now = time.monotonic()
-		self.display.flush()
+		self.flushRetry()
 		owner = self.display.get_selection_owner(self.SELECTION)
 		if owner != X.NONE:
 			for target in targets:
@@ -195,7 +195,7 @@ class XSelection(Thread):
 					property=target_atom,
 					time=X.CurrentTime)
 				owner.send_event(selection_request)
-				self.display.flush()
+				self.flushRetry()
 			while self.inbox.empty():
 				if (time.monotonic() - now) >= 0.05:
 					break
@@ -225,7 +225,7 @@ class XSelection(Thread):
 			content_atoms[target_atom] = data
 		if self.content_set:
 			self.setter_window.send_event(self.selection_clear)
-			self.display.flush()
+			self.flushRetry()
 		self.outbox.put_nowait(content_atoms)
 
 	def store(self):
@@ -238,7 +238,7 @@ class XSelection(Thread):
 				self.setter_window.convert_selection(
 					self.CMANAGER_ATOM, self.SAVE_TARGETS, self.ST_PROPERTY,
 					X.CurrentTime)
-				self.display.flush()
+				self.flushRetry()
 				self.save_targets.clear()
 
 	def clear(self):
@@ -247,4 +247,10 @@ class XSelection(Thread):
 		self.content_set = True
 		self.outbox.put_nowait({})
 		self.setter_window.send_event(self.selection_clear)
-		self.display.flush()
+		self.flushRetry()
+
+	def flushRetry(self):
+		try:
+			self.display.flush()
+		except Exception:
+			self.flushRetry()
