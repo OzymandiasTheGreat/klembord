@@ -338,7 +338,7 @@ class XSetter(Thread):
 				break
 			try:
 				current_owner = self.display.get_selection_owner(self.SELECTION)
-			except (BadAtom, RuntimeError) as e:
+			except (BadAtom, RuntimeError, TypeError) as e:
 				ErrorReporter.print(e)
 				self.reset()
 				break
@@ -398,14 +398,17 @@ class XSetter(Thread):
 				self.save_targets.append(target_atom)
 			content_atoms[target_atom] = data
 		if self.content_set:
-			self.window.send_event(self.selection_clear, onerror=errHandler)
-			try:
-				self.display.flush()
-			except Exception as e:
-				ErrorReporter.print(e)
-				raise BrokenConnection('Failed to flush events') from e
-			if errHandler.get_error():
-				raise BrokenConnection('Failed to send events')
+			with ThreadingTimeout(0.05) as timeout:
+				self.window.send_event(self.selection_clear, onerror=errHandler)
+				try:
+					self.display.flush()
+				except Exception as e:
+					ErrorReporter.print(e)
+					raise BrokenConnection('Failed to flush events') from e
+				if errHandler.get_error():
+					raise BrokenConnection('Failed to send events')
+			if timeout.state == timeout.TIMED_OUT:
+				raise BrokenConnection('Sending event timed out')
 		self.outbox.put_nowait(content_atoms)
 
 	def store(self):
