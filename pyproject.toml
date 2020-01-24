@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "klembord"
-version = "0.1.5"
+version = "0.2.0"
 description = "Full toolkit agnostic cross-platform clipboard access"
 readme = "README.md"
 keywords = ["clipboard", "cross-platform"]
@@ -20,6 +20,7 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.4"
 python-xlib = { version = "^0.26", markers = "sys_platform == 'linux'" }
+stopit = { version = "^1.1.2", markers = "sys_platform == 'linux'" }
 
 [tool.poetry.dev-dependencies]
 
