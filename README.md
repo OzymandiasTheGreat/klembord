@@ -3,6 +3,12 @@
 `klembord` is a python 3 package that provides full clipboard access on supported platforms (Linux and Windows for now, though this may change in the future).
 `klembord` has minimal dependencies, depending only on platform specific apis, which means it can be used with any graphics toolkit or without a toolkit at all.
 
+-------------------
+
+If you find this software useful, [consider becoming a patron](https://www.patreon.com/ozymandias)
+
+-------------------
+
 ## Install and dependencies
 
 `klembord` uses `python-xlib` under Linux and `ctypes` on Windows.
