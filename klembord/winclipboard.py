@@ -183,19 +183,50 @@ class WinClipboard(object):
 			raise RuntimeError('Failed to open clipboard')
 
 	def wrap_html(self, fragment_str):
+
 		fragment_bytes = fragment_str.encode('utf8')
-		footer = '<!--EndFragment-->\r\n</body>\r\n</html>'
-		header = ('Version:0.9\r\nStartHTML:{0}\r\nEndHTML:{1}\r\n'
-			+ 'StartFragment:{2}\r\nEndFragment:{3}\r\n<html><body>\r\n'
-			+ '<!--StartFragment-->')
-		padded_header = header.format(*['00000000'] * 4)
-		wrapped = b''.join((
-			header.format(
-				str(97).zfill(8),
-				str(97 + len(fragment_bytes) + len(footer)).zfill(8),
-				str(len(padded_header)).zfill(8),
-				str(len(padded_header) + len(fragment_bytes)).zfill(8))
-				.encode('utf8'),
-			fragment_bytes,
-			footer.encode('utf8')))
+		description = (
+			'Version:0.9\r\n'
+			'StartHTML:{0}\r\n'
+			'EndHTML:{1}\r\n'
+			'StartFragment:{2}\r\n'
+			'EndFragment:{3}\r\n'
+		)
+
+		html_header_suffix =  (
+			'<html>\r\n'
+			'<body>\r\n'
+			'<!--StartFragment-->\r\n'
+		)
+
+		html_header = description + html_header_suffix
+
+		padded_description = description.format(*['00000000'] * 4)
+		padded_html_header = padded_description + html_header_suffix
+
+		footer_bytes = (
+			'\r\n<!--EndFragment-->\r\n'
+			'</body>\r\n'
+			'</html>'
+		).encode('utf8')
+
+		description_size = len(padded_description.encode('utf8'))
+		html_header_size = len(padded_html_header.encode('utf8'))
+		fragment_size = len(fragment_bytes)
+		html_footer_size = len(footer_bytes)
+		
+		sizes = (
+			description_size, # StartHtml
+			description_size+html_header_size+fragment_size+html_footer_size, # EndHtml 
+			description_size+html_header_size, # StartFragment
+			description_size+html_header_size+fragment_size, # EndFragment
+		)
+
+		header = html_header.format(
+			*[str(x).zfill(8) for x in sizes]
+		).encode('utf8')
+		
+		wrapped = b''.join((header, fragment_bytes, footer_bytes))
+		
+
 		return wrapped
