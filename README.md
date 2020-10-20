@@ -5,7 +5,9 @@
 
 -------------------
 
-If you find this software useful, [consider becoming a patron](https://www.patreon.com/ozymandias)
+If you find this software useful,
+
+please [![Donate](https://d1iczxrky3cnb2.cloudfront.net/button-medium-blue.png)](https://donorbox.org/open-source-support)
 
 -------------------
 
