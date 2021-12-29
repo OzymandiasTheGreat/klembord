@@ -1,45 +1,149 @@
 [[package]]
-category = "main"
-description = "Python X Library"
-marker = "sys_platform == \"linux\""
-name = "python-xlib"
+name = "mypy"
+version = "0.930"
+description = "Optional static typing for Python"
+category = "dev"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+mypy-extensions = ">=0.4.3"
+tomli = ">=1.1.0"
+typed-ast = {version = ">=1.4.0,<2", markers = "python_version < \"3.8\""}
+typing-extensions = ">=3.10"
+
+[package.extras]
+dmypy = ["psutil (>=4.0)"]
+python2 = ["typed-ast (>=1.4.0,<2)"]
+
+[[package]]
+name = "mypy-extensions"
+version = "0.4.3"
+description = "Experimental type system extensions for programs checked with the mypy typechecker."
+category = "dev"
 optional = false
 python-versions = "*"
+
+[[package]]
+name = "python-xlib"
 version = "0.26"
+description = "Python X Library"
+category = "main"
+optional = false
+python-versions = "*"
 
 [package.dependencies]
 six = ">=1.10.0"
 
 [[package]]
-category = "main"
-description = "Python 2 and 3 compatibility utilities"
-marker = "sys_platform == \"linux\""
 name = "six"
+version = "1.16.0"
+description = "Python 2 and 3 compatibility utilities"
+category = "main"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
-version = "1.14.0"
 
 [[package]]
-category = "main"
-description = "Timeout control decorator and context managers, raise any exception in another thread"
 name = "stopit"
+version = "1.1.2"
+description = "Timeout control decorator and context managers, raise any exception in another thread"
+category = "main"
 optional = false
 python-versions = "*"
-version = "1.1.2"
+
+[[package]]
+name = "tomli"
+version = "1.2.3"
+description = "A lil' TOML parser"
+category = "dev"
+optional = false
+python-versions = ">=3.6"
+
+[[package]]
+name = "typed-ast"
+version = "1.5.1"
+description = "a fork of Python 2 and 3 ast modules with type comment support"
+category = "dev"
+optional = false
+python-versions = ">=3.6"
+
+[[package]]
+name = "typing-extensions"
+version = "4.0.1"
+description = "Backported and Experimental Type Hints for Python 3.6+"
+category = "dev"
+optional = false
+python-versions = ">=3.6"
 
 [metadata]
-content-hash = "5f6db7033d1bd2a446ce05d7d60c30e38eef93d4ccbaa06523ad9b72130e43ea"
-python-versions = "^3.4"
+lock-version = "1.1"
+python-versions = "^3.6"
+content-hash = "a70ed166d874e5e21674eb6e9ef4a1106e6ba9bdd9f0e0e4327ea6807a60ce86"
 
 [metadata.files]
+mypy = [
+    {file = "mypy-0.930-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:221cc94dc6a801ccc2be7c0c9fd791c5e08d1fa2c5e1c12dec4eab15b2469871"},
+    {file = "mypy-0.930-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:db3a87376a1380f396d465bed462e76ea89f838f4c5e967d68ff6ee34b785c31"},
+    {file = "mypy-0.930-cp310-cp310-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:1d2296f35aae9802eeb1327058b550371ee382d71374b3e7d2804035ef0b830b"},
+    {file = "mypy-0.930-cp310-cp310-win_amd64.whl", hash = "sha256:959319b9a3cafc33a8185f440a433ba520239c72e733bf91f9efd67b0a8e9b30"},
+    {file = "mypy-0.930-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:45a4dc21c789cfd09b8ccafe114d6de66f0b341ad761338de717192f19397a8c"},
+    {file = "mypy-0.930-cp36-cp36m-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:1e689e92cdebd87607a041585f1dc7339aa2e8a9f9bad9ba7e6ece619431b20c"},
+    {file = "mypy-0.930-cp36-cp36m-win_amd64.whl", hash = "sha256:ed4e0ea066bb12f56b2812a15ff223c57c0a44eca817ceb96b214bb055c7051f"},
+    {file = "mypy-0.930-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:a9d8dffefba634b27d650e0de2564379a1a367e2e08d6617d8f89261a3bf63b2"},
+    {file = "mypy-0.930-cp37-cp37m-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:b419e9721260161e70d054a15abbd50603c16f159860cfd0daeab647d828fc29"},
+    {file = "mypy-0.930-cp37-cp37m-win_amd64.whl", hash = "sha256:601f46593f627f8a9b944f74fd387c9b5f4266b39abad77471947069c2fc7651"},
+    {file = "mypy-0.930-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:1ea7199780c1d7940b82dbc0a4e37722b4e3851264dbba81e01abecc9052d8a7"},
+    {file = "mypy-0.930-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:70b197dd8c78fc5d2daf84bd093e8466a2b2e007eedaa85e792e513a820adbf7"},
+    {file = "mypy-0.930-cp38-cp38-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:5feb56f8bb280468fe5fc8e6f56f48f99aa0df9eed3c507a11505ee4657b5380"},
+    {file = "mypy-0.930-cp38-cp38-win_amd64.whl", hash = "sha256:2e9c5409e9cb81049bb03fa1009b573dea87976713e3898561567a86c4eaee01"},
+    {file = "mypy-0.930-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:554873e45c1ca20f31ddf873deb67fa5d2e87b76b97db50669f0468ccded8fae"},
+    {file = "mypy-0.930-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:0feb82e9fa849affca7edd24713dbe809dce780ced9f3feca5ed3d80e40b777f"},
+    {file = "mypy-0.930-cp39-cp39-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:bc1a0607ea03c30225347334af66b0af12eefba018a89a88c209e02b7065ea95"},
+    {file = "mypy-0.930-cp39-cp39-win_amd64.whl", hash = "sha256:f9f665d69034b1fcfdbcd4197480d26298bbfb5d2dfe206245b6498addb34999"},
+    {file = "mypy-0.930-py3-none-any.whl", hash = "sha256:bf4a44e03040206f7c058d1f5ba02ef2d1820720c88bc4285c7d9a4269f54173"},
+    {file = "mypy-0.930.tar.gz", hash = "sha256:51426262ae4714cc7dd5439814676e0992b55bcc0f6514eccb4cf8e0678962c2"},
+]
+mypy-extensions = [
+    {file = "mypy_extensions-0.4.3-py2.py3-none-any.whl", hash = "sha256:090fedd75945a69ae91ce1303b5824f428daf5a028d2f6ab8a299250a846f15d"},
+    {file = "mypy_extensions-0.4.3.tar.gz", hash = "sha256:2d82818f5bb3e369420cb3c4060a7970edba416647068eb4c5343488a6c604a8"},
+]
 python-xlib = [
     {file = "python-xlib-0.26.tar.bz2", hash = "sha256:b819c7e5f55830305919d78ea42b0cbd5e13687f5d12aa53556c33674b9876df"},
     {file = "python_xlib-0.26-py2.py3-none-any.whl", hash = "sha256:244570b93cb82f5ceea3e4c861b4a0fffcea36947efa10fd63b7aa69d30047a8"},
 ]
 six = [
-    {file = "six-1.14.0-py2.py3-none-any.whl", hash = "sha256:8f3cd2e254d8f793e7f3d6d9df77b92252b52637291d0f0da013c76ea2724b6c"},
-    {file = "six-1.14.0.tar.gz", hash = "sha256:236bdbdce46e6e6a3d61a337c0f8b763ca1e8717c03b369e87a7ec7ce1319c0a"},
+    {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
+    {file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
 ]
 stopit = [
     {file = "stopit-1.1.2.tar.gz", hash = "sha256:f7f39c583fd92027bd9d06127b259aee7a5b7945c1f1fa56263811e1e766996d"},
+]
+tomli = [
+    {file = "tomli-1.2.3-py3-none-any.whl", hash = "sha256:e3069e4be3ead9668e21cb9b074cd948f7b3113fd9c8bba083f48247aab8b11c"},
+    {file = "tomli-1.2.3.tar.gz", hash = "sha256:05b6166bff487dc068d322585c7ea4ef78deed501cc124060e0f238e89a9231f"},
+]
+typed-ast = [
+    {file = "typed_ast-1.5.1-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:5d8314c92414ce7481eee7ad42b353943679cf6f30237b5ecbf7d835519e1212"},
+    {file = "typed_ast-1.5.1-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:b53ae5de5500529c76225d18eeb060efbcec90ad5e030713fe8dab0fb4531631"},
+    {file = "typed_ast-1.5.1-cp310-cp310-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:24058827d8f5d633f97223f5148a7d22628099a3d2efe06654ce872f46f07cdb"},
+    {file = "typed_ast-1.5.1-cp310-cp310-win_amd64.whl", hash = "sha256:a6d495c1ef572519a7bac9534dbf6d94c40e5b6a608ef41136133377bba4aa08"},
+    {file = "typed_ast-1.5.1-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:de4ecae89c7d8b56169473e08f6bfd2df7f95015591f43126e4ea7865928677e"},
+    {file = "typed_ast-1.5.1-cp36-cp36m-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:256115a5bc7ea9e665c6314ed6671ee2c08ca380f9d5f130bd4d2c1f5848d695"},
+    {file = "typed_ast-1.5.1-cp36-cp36m-win_amd64.whl", hash = "sha256:7c42707ab981b6cf4b73490c16e9d17fcd5227039720ca14abe415d39a173a30"},
+    {file = "typed_ast-1.5.1-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:71dcda943a471d826ea930dd449ac7e76db7be778fcd722deb63642bab32ea3f"},
+    {file = "typed_ast-1.5.1-cp37-cp37m-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:4f30a2bcd8e68adbb791ce1567fdb897357506f7ea6716f6bbdd3053ac4d9471"},
+    {file = "typed_ast-1.5.1-cp37-cp37m-win_amd64.whl", hash = "sha256:ca9e8300d8ba0b66d140820cf463438c8e7b4cdc6fd710c059bfcfb1531d03fb"},
+    {file = "typed_ast-1.5.1-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:9caaf2b440efb39ecbc45e2fabde809cbe56272719131a6318fd9bf08b58e2cb"},
+    {file = "typed_ast-1.5.1-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:c9bcad65d66d594bffab8575f39420fe0ee96f66e23c4d927ebb4e24354ec1af"},
+    {file = "typed_ast-1.5.1-cp38-cp38-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:591bc04e507595887160ed7aa8d6785867fb86c5793911be79ccede61ae96f4d"},
+    {file = "typed_ast-1.5.1-cp38-cp38-win_amd64.whl", hash = "sha256:a80d84f535642420dd17e16ae25bb46c7f4c16ee231105e7f3eb43976a89670a"},
+    {file = "typed_ast-1.5.1-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:38cf5c642fa808300bae1281460d4f9b7617cf864d4e383054a5ef336e344d32"},
+    {file = "typed_ast-1.5.1-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:5b6ab14c56bc9c7e3c30228a0a0b54b915b1579613f6e463ba6f4eb1382e7fd4"},
+    {file = "typed_ast-1.5.1-cp39-cp39-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:a2b8d7007f6280e36fa42652df47087ac7b0a7d7f09f9468f07792ba646aac2d"},
+    {file = "typed_ast-1.5.1-cp39-cp39-win_amd64.whl", hash = "sha256:b6d17f37f6edd879141e64a5db17b67488cfeffeedad8c5cec0392305e9bc775"},
+    {file = "typed_ast-1.5.1.tar.gz", hash = "sha256:484137cab8ecf47e137260daa20bafbba5f4e3ec7fda1c1e69ab299b75fa81c5"},
+]
+typing-extensions = [
+    {file = "typing_extensions-4.0.1-py3-none-any.whl", hash = "sha256:7f001e5ac290a0c0401508864c7ec868be4e701886d5b573a9528ed3973d9d3b"},
+    {file = "typing_extensions-4.0.1.tar.gz", hash = "sha256:4ca091dea149f945ec56afb48dae714f21e8692ef22a395223bcd328961b6a0e"},
 ]

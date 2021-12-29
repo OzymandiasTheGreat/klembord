@@ -16,7 +16,8 @@ Attributes:
 """
 
 import sys
-from collections import OrderedDict, Mapping, ByteString, Sequence
+from collections import OrderedDict
+from collections.abc import Mapping, Sequence
 if sys.platform.startswith('win32'):
 	from .winclipboard import WinClipboard
 	WINDOWS = True

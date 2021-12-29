@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-from collections import OrderedDict, ByteString
+from collections import OrderedDict
+from collections.abc import ByteString
 from ctypes import windll, create_unicode_buffer, memmove, c_uint, c_wchar
 from ctypes import c_void_p, c_bool, c_int, c_byte
 
@@ -214,10 +215,10 @@ class WinClipboard(object):
 		html_header_size = len(padded_html_header.encode('utf8'))
 		fragment_size = len(fragment_bytes)
 		html_footer_size = len(footer_bytes)
-		
+
 		sizes = (
 			description_size, # StartHtml
-			description_size+html_header_size+fragment_size+html_footer_size, # EndHtml 
+			description_size+html_header_size+fragment_size+html_footer_size, # EndHtml
 			description_size+html_header_size, # StartFragment
 			description_size+html_header_size+fragment_size, # EndFragment
 		)
@@ -225,8 +226,8 @@ class WinClipboard(object):
 		header = html_header.format(
 			*[str(x).zfill(8) for x in sizes]
 		).encode('utf8')
-		
+
 		wrapped = b''.join((header, fragment_bytes, footer_bytes))
-		
+
 
 		return wrapped
