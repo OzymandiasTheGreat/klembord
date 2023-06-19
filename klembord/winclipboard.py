@@ -166,9 +166,9 @@ class WinClipboard(object):
 			windll.user32.EmptyClipboard()
 			for format, data in formats.items():
 				handle = windll.kernel32.GlobalAlloc(
-					GMEM_MOVEABLE | GMEM_ZEROINIT, len(data) + 2)
+					GMEM_MOVEABLE | GMEM_ZEROINIT, len(data)+1)
 				ptr = windll.kernel32.GlobalLock(handle)
-				memmove(ptr, data, len(data))
+				memmove(ptr, data, len(data)+1)
 				windll.kernel32.GlobalUnlock(ptr)
 				windll.user32.SetClipboardData(format, handle)
 			windll.user32.CloseClipboard()
@@ -184,50 +184,48 @@ class WinClipboard(object):
 			raise RuntimeError('Failed to open clipboard')
 
 	def wrap_html(self, fragment_str):
-
-		fragment_bytes = fragment_str
-		description = (
+		
+		# structs
+		header_indexes = (
 			'Version:0.9\r\n'
 			'StartHTML:{0}\r\n'
 			'EndHTML:{1}\r\n'
 			'StartFragment:{2}\r\n'
 			'EndFragment:{3}\r\n'
+			'SourceURL:https://google.com\r\n'
 		)
 
-		html_header_suffix =  (
+		html_header_suffix = (
 			'<html>\r\n'
 			'<body>\r\n'
-			'<!--StartFragment-->\r\n'
+			'<!--StartFragment-->'
 		)
-
-		html_header = description + html_header_suffix
-
-		
-		padded_description = description.format(*['00000000'] * 4)
-		padded_html_header = padded_description + html_header_suffix
 		footer_bytes = (
-			'\r\n<!--EndFragment-->\r\n'
+			'<!--EndFragment-->\r\n'
 			'</body>\r\n'
 			'</html>'
 		)
-
-		description_size = len(padded_description.encode('utf8'))
-		html_header_size = len(padded_html_header.encode('utf8'))
-		fragment_size = len(fragment_bytes.encode('utf8'))
+		
+		# html header 
+		# header_indexes = header_indexes.format(*['0000000000'] * 4)
+		header_indexes_size = len(header_indexes.encode('utf8'))+ 4*11
+		
+		html_header = header_indexes + html_header_suffix
+		html_header_size = len(html_header.encode('utf8'))
+		
+		fragment_size = len(fragment_str.encode('utf8'))
 		html_footer_size = len(footer_bytes.encode('utf8'))
 
 		sizes = (
-			description_size, # StartHtml
-			description_size+html_header_size+fragment_size+html_footer_size, # EndHtml
-			description_size+html_header_size, # StartFragment
-			description_size+html_header_size+fragment_size, # EndFragment
+			header_indexes_size,									# StartHTML
+			html_header_size + fragment_size + html_footer_size,	# EndHTML
+			html_header_size,									   # StartFragment
+			html_header_size + fragment_size,					   # EndFragment
 		)
 
-		header = html_header.format(
-			*[str(x).zfill(8) for x in sizes]
-		).encode('utf8')
+		# populate indexes with sizes
+		header = html_header.format(*[str(x).zfill(10) for x in sizes])
 
-		wrapped = b''.join((header, fragment_bytes, footer_bytes))
-
+		wrapped = ''.join((header, fragment_str, footer_bytes)).encode('utf8')
 
 		return wrapped
