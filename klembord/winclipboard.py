@@ -146,31 +146,26 @@ class WinClipboard(object):
 		formats = OrderedDict()
 		for target, data in content.items():
 			if not isinstance(data, (str, ByteString, type(None))):
-				raise TypeError('Unsupported data type:\n{}'.format(repr(data)))
+				raise TypeError(f'Unsupported data type:\n{repr(data)}')
+
 			if target in UNSUPPORTED:
 				raise TypeError('Unsupported target/clipboard format')
 			elif data:
 				if target in TARGETS:
-					if isinstance(data, str):
-						formats[TARGETS[target]] = data.encode()
-					else:
-						formats[TARGETS[target]] = data
+					formats[TARGETS[target]] = data.encode() if isinstance(data, str) else data
 				else:
-					format = windll.user32.RegisterClipboardFormatW(
+					fmt = windll.user32.RegisterClipboardFormatW(
 						create_unicode_buffer(target, 1024))
-					if isinstance(data, str):
-						formats[format] = data.encode()
-					else:
-						formats[format] = data
+					formats[fmt] = data.encode() if isinstance(data, str) else data
 		if windll.user32.OpenClipboard(None):
 			windll.user32.EmptyClipboard()
-			for format, data in formats.items():
+			for fmt, data in formats.items():
 				handle = windll.kernel32.GlobalAlloc(
 					GMEM_MOVEABLE | GMEM_ZEROINIT, len(data) + 2)
 				ptr = windll.kernel32.GlobalLock(handle)
 				memmove(ptr, data, len(data))
 				windll.kernel32.GlobalUnlock(ptr)
-				windll.user32.SetClipboardData(format, handle)
+				windll.user32.SetClipboardData(fmt, handle)
 			windll.user32.CloseClipboard()
 		else:
 			raise RuntimeError('Failed to open clipboard')
@@ -201,9 +196,7 @@ class WinClipboard(object):
 		)
 
 		html_header = description + html_header_suffix
-
 		padded_description = description.format(*['00000000'] * 4)
-		padded_html_header = padded_description + html_header_suffix
 
 		footer_bytes = (
 			'\r\n<!--EndFragment-->\r\n'
@@ -212,7 +205,7 @@ class WinClipboard(object):
 		).encode('utf8')
 
 		description_size = len(padded_description.encode('utf8'))
-		html_header_size = len(padded_html_header.encode('utf8'))
+		html_header_size = len(html_header_suffix.encode('utf8'))
 		fragment_size = len(fragment_bytes)
 		html_footer_size = len(footer_bytes)
 
@@ -227,7 +220,4 @@ class WinClipboard(object):
 			*[str(x).zfill(8) for x in sizes]
 		).encode('utf8')
 
-		wrapped = b''.join((header, fragment_bytes, footer_bytes))
-
-
-		return wrapped
+		return b''.join((header, fragment_bytes, footer_bytes))
