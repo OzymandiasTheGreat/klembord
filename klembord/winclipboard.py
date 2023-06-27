@@ -201,9 +201,7 @@ class WinClipboard(object):
 		)
 
 		html_header = description + html_header_suffix
-
 		padded_description = description.format(*['00000000'] * 4)
-		padded_html_header = padded_description + html_header_suffix
 
 		footer_bytes = (
 			'\r\n<!--EndFragment-->\r\n'
@@ -212,7 +210,7 @@ class WinClipboard(object):
 		).encode('utf8')
 
 		description_size = len(padded_description.encode('utf8'))
-		html_header_size = len(padded_html_header.encode('utf8'))
+		html_header_size = len(html_header_suffix.encode('utf8'))
 		fragment_size = len(fragment_bytes)
 		html_footer_size = len(footer_bytes)
 
@@ -228,6 +226,5 @@ class WinClipboard(object):
 		).encode('utf8')
 
 		wrapped = b''.join((header, fragment_bytes, footer_bytes))
-
-
 		return wrapped
+
