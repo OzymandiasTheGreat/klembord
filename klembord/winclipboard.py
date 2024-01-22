@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-from collections import OrderedDict, ByteString
+from collections import OrderedDict
+from collections.abc import ByteString
 from ctypes import windll, create_unicode_buffer, memmove, c_uint, c_wchar
 from ctypes import c_void_p, c_bool, c_int, c_byte
 import re

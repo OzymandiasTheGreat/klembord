@@ -4,7 +4,7 @@ import time
 import sys
 from threading import Thread
 from queue import Queue, Empty
-from collections import ByteString
+from collections.abc import ByteString
 from traceback import print_exception
 from Xlib import X, display, Xatom
 from Xlib.protocol import event
