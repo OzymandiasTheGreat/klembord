@@ -4,6 +4,7 @@ from collections import OrderedDict
 from collections.abc import ByteString
 from ctypes import windll, create_unicode_buffer, memmove, c_uint, c_wchar
 from ctypes import c_void_p, c_bool, c_int, c_byte
+import re
 
 
 UNSUPPORTED = {
@@ -231,3 +232,31 @@ class WinClipboard(object):
 
 
 		return wrapped
+
+
+start_html_RE = re.compile(r'(StartHTML):(-?\d+)')
+start_fragment_RE = re.compile(r'(StartFragment):(\d+)')
+end_fragment_RE = re.compile(r'(EndFragment):(\d+)')
+
+def parse_description(text):
+	''' Returns a dictionary of the description info.
+	Only StartFragment and EndFragment are guaranteed to exist and be integers.
+	'''
+	start_html = start_html_RE.search(text)
+	start_fragment = start_fragment_RE.search(text)
+	end_fragment = end_fragment_RE.search(text)
+	
+	description = OrderedDict()
+	
+	if start_html:
+		start_index = int(start_html.group(2))
+		
+		if start_index > 0:
+			description_blob = text[:start_index]
+			
+			description = OrderedDict( line.split(':', 1) for line in description_blob.splitlines() )
+			
+	description[ start_fragment.group(1) ] = int(start_fragment.group(2))
+	description[ end_fragment.group(1) ] = int(end_fragment.group(2))
+	
+	return description

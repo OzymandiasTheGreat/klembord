@@ -20,6 +20,7 @@ from collections import OrderedDict
 from collections.abc import Mapping, Sequence
 if sys.platform.startswith('win32'):
 	from .winclipboard import WinClipboard
+	from .winclipboard import parse_description
 	WINDOWS = True
 	LINUX = False
 else:
@@ -200,7 +201,7 @@ class Selection(object):
 		else:
 			raise TypeError('text or html is not str')
 
-	def get_with_rich_text(self):
+	def get_with_rich_text(self, include_win_description=False):
 		"""Get the contents of the selection in plaintext and HTML formats.
 
 		Returns:
@@ -210,11 +211,13 @@ class Selection(object):
 		"""
 
 		if WINDOWS:
+			description = OrderedDict()
 			content = self.get((W_HTML, W_UNICODE))
 			html = content[W_HTML]
 			if html:
 				# Strip HTML Format additions and return just the fragment.
-				html = html.decode(UTF8)[131:-38]
+				description = parse_description(html.decode(UTF8))
+				html = html[ description['StartFragment']: description['EndFragment']].decode(UTF8) # Must decode after slicing
 			text = content[W_UNICODE]
 			if text:
 				text = text.decode(UTF16)
@@ -236,7 +239,11 @@ class Selection(object):
 						html = html.decode(UTF16)
 					except UnicodeDecodeError:
 						html = html.decode(UTF8, 'ignore')
-		return (text, html)
+		
+		if WINDOWS and include_win_description:
+			return (text, html, description)
+		else:
+			return (text, html)
 
 	def clear(self):
 		"""Empty selection.
@@ -366,7 +373,7 @@ def set_with_rich_text(text, html):
 	SELECTION.set_with_rich_text(text, html)
 
 
-def get_with_rich_text():
+def get_with_rich_text(include_win_description=False):
 	"""Get the contents of the selection in plaintext and HTML formats.
 
 	Returns:
@@ -378,7 +385,7 @@ def get_with_rich_text():
 	global SELECTION
 	if SELECTION is None:
 		SELECTION = Selection()
-	return SELECTION.get_with_rich_text()
+	return SELECTION.get_with_rich_text(include_win_description)
 
 
 def clear():
