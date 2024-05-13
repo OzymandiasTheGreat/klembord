@@ -16,6 +16,7 @@ Attributes:
 """
 
 import sys
+from re import search
 from collections import OrderedDict
 from collections.abc import Mapping, Sequence
 if sys.platform.startswith('win32'):
@@ -214,7 +215,7 @@ class Selection(object):
 			html = content[W_HTML]
 			if html:
 				# Strip HTML Format additions and return just the fragment.
-				html = html.decode(UTF8)[131:-38]
+				html = search("<html>([\\s\\S]+)</html>",html.decode(UTF8)).group(0)
 			text = content[W_UNICODE]
 			if text:
 				text = text.decode(UTF16)
